@@ -531,7 +531,9 @@
       }
       document.querySelectorAll('dialog').forEach(function (d) { if (d.querySelector('.carousel')) makeCarousel(d); });
 
-      // Contact form: sends the message straight to Branel's inbox through FormSubmit
+      // Contact form: sends the message straight to Branel's inbox through Web3Forms
+      // (this access key is public by design; it only allows sending messages to Branel)
+      var WEB3FORMS_KEY = '7f7e86e6-20f3-487f-9dcf-14d82dd91aae';
       var form = document.getElementById('contactForm');
       var note = document.getElementById('formNote');
       var sendBtn = document.getElementById('sendBtn');
@@ -557,21 +559,20 @@
         setNote('Sending your message…');
         var ctrl = window.AbortController ? new AbortController() : null;
         var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 15000);
-        fetch('https://formsubmit.co/ajax/' + TO, {
+        fetch('https://api.web3forms.com/submit', {
           method: 'POST',
           signal: ctrl ? ctrl.signal : undefined,
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify({ name: name, email: email, message: msg, _subject: subject, _replyto: email, _template: 'table', _captcha: 'false' })
+          body: JSON.stringify({ access_key: WEB3FORMS_KEY, subject: subject, from_name: 'Branel Ong Portfolio', name: name, email: email, replyto: email, message: msg })
         }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
           .then(function (res) {
-            if (!res.ok || String(res.d.success) !== 'true') throw new Error(res.d.message || 'Send failed');
+            if (!res.ok || res.d.success !== true) throw new Error(res.d.message || 'Send failed');
             form.reset();
             setNote('Thanks, ' + name + '! Your message has been sent. I\'ll reply to ' + email + '.', 'ok');
             document.getElementById('fallback').hidden = true;
           })
           .catch(function (err) {
             var why = err && err.name === 'AbortError' ? 'Sending took too long.' :
-              (err && /activat/i.test(err.message || '')) ? 'The contact form is waiting to be activated by its owner.' :
               'Your message could not be sent right now.';
             setNote('Sorry. ' + why + ' Please use one of the options below.', 'err');
             showFallback(subject, msg + '\n\n— ' + name + '\n' + email);
