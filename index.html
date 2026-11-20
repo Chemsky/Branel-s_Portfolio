@@ -118,32 +118,52 @@
     .contact-line .email { color: var(--text); font-weight: 500; user-select: all; }
     .link-btn { border: 0; background: none; color: var(--accent); cursor: pointer; font-size: 14px; font-weight: 600; padding: 0; }
 
-    /* About carousel */
-    .panel { padding: 8px 0 56px; scroll-margin-top: 72px; }
-    .section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
-    h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin: 0; font-weight: 600; }
-    .carousel {
-      background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
-      box-shadow: var(--shadow); overflow: hidden;
+    /* Pop-ups with sliders */
+    dialog {
+      width: min(680px, calc(100vw - 32px)); max-height: calc(100dvh - 32px);
+      padding: 0; border: 1px solid var(--line); border-radius: 18px; overflow: auto;
+      background: var(--surface); color: var(--text); box-shadow: 0 20px 60px rgba(0,0,0,.25);
     }
-    .viewport { overflow: hidden; overflow: clip; }
-    .track { display: flex; transition: transform .45s cubic-bezier(.2,.7,.2,1); touch-action: pan-y; }
-    .slide { flex: 0 0 100%; min-width: 0; padding: 32px 32px 24px; min-height: 230px; }
-    .slide-label { font-family: var(--font-mono); font-size: 12px; color: var(--accent); margin-bottom: 8px; }
-    .slide h3 { margin: 0 0 12px; font-size: 22px; letter-spacing: -.02em; }
-    .slide p { margin: 0; max-width: 62ch; color: var(--text); }
-    .slide ul:not(.chips) { margin: 0; padding-left: 18px; }
-    .slide li { margin-bottom: 6px; }
-    .slide li::marker { color: var(--accent); }
-    .slide .chips li { margin-bottom: 0; }
-    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-    .stat { border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
-    .stat b { display: block; font-size: 22px; letter-spacing: -.02em; }
+    dialog::backdrop { background: var(--scrim); backdrop-filter: blur(2px); }
+    dialog[open] { animation: pop .22s ease-out; }
+    @keyframes pop { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: none; } }
+    .dlg-head {
+      position: sticky; top: 0; background: var(--surface); z-index: 1;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 16px 22px; border-bottom: 1px solid var(--line);
+    }
+    .dlg-head h3 { margin: 0; font-size: 19px; letter-spacing: -.01em; }
+    .dlg-tools { display: flex; align-items: center; gap: 14px; }
+    .close {
+      width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--line);
+      background: var(--surface); color: var(--text); cursor: pointer; font-size: 20px; line-height: 1;
+    }
+    .dates { font-family: var(--font-mono); font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .company { color: var(--accent); font-weight: 600; font-size: 15px; }
+
+    .viewport { overflow: hidden; overflow: clip; transition: height .3s ease; }
+    .track { display: flex; align-items: flex-start; transition: transform .45s cubic-bezier(.2,.7,.2,1); touch-action: pan-y; }
+    .slide { flex: 0 0 100%; min-width: 0; padding: 24px 22px 8px; }
+    .slide-label { font-family: var(--font-mono); font-size: 12px; color: var(--accent); margin-bottom: 6px; }
+    .slide h3 { margin: 0 0 12px; font-size: 22px; letter-spacing: -.02em; text-wrap: balance; }
+    .slide p { margin: 0; max-width: 62ch; }
+    .list { margin: 12px 0 0; padding-left: 18px; }
+    .list li { margin-bottom: 6px; }
+    .list li::marker { color: var(--accent); }
+    .slide h3 + .list { margin-top: 0; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+    .chips li { font-size: 14px; padding: 6px 12px; border-radius: 8px; background: var(--accent-soft); color: var(--text); }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .stat b { display: block; font-size: 26px; letter-spacing: -.02em; color: var(--accent); }
     .stat span { color: var(--muted); font-size: 14px; }
     .edu-row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; }
-    .company { color: var(--accent); font-weight: 600; font-size: 15px; }
-    .dates { font-family: var(--font-mono); font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
-    .controls { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px 18px; gap: 12px; }
+    .highlight { border-left: 3px solid var(--accent); padding: 2px 0 2px 14px; margin: 14px 0 0; font-size: 15px; }
+
+    .controls {
+      position: sticky; bottom: 0; background: var(--surface);
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 14px 22px 18px;
+    }
     .dots { display: flex; gap: 8px; }
     .dot { width: 9px; height: 9px; border-radius: 50%; border: 0; background: var(--line); cursor: pointer; padding: 0; transition: width .2s; }
     .dot[aria-current="true"] { background: var(--accent); width: 24px; border-radius: 99px; }
@@ -154,49 +174,10 @@
     }
     .arrow:hover { background: var(--accent-soft); }
     @media (max-width: 560px) {
-      .slide { padding: 24px 20px 16px; min-height: 300px; }
-      .stats { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr; gap: 12px; }
+      .slide { padding: 20px 18px 8px; }
+      .dlg-head, .controls { padding-left: 18px; padding-right: 18px; }
     }
-
-    /* Pop-ups */
-    dialog {
-      width: min(720px, calc(100vw - 32px)); max-height: min(86vh, 760px);
-      padding: 0; border: 1px solid var(--line); border-radius: 18px;
-      background: var(--surface); color: var(--text); box-shadow: 0 20px 60px rgba(0,0,0,.25);
-    }
-    dialog::backdrop { background: var(--scrim); backdrop-filter: blur(2px); }
-    dialog[open] { animation: pop .22s ease-out; }
-    @keyframes pop { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: none; } }
-    .dlg-head {
-      position: sticky; top: 0; background: var(--surface); z-index: 1;
-      display: flex; align-items: center; justify-content: space-between; gap: 12px;
-      padding: 18px 22px; border-bottom: 1px solid var(--line);
-    }
-    .dlg-head h3 { margin: 0; font-size: 19px; letter-spacing: -.01em; }
-    .close {
-      width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--line);
-      background: var(--surface); color: var(--text); cursor: pointer; font-size: 20px; line-height: 1;
-    }
-    .dlg-body { padding: 20px 22px 24px; display: grid; gap: 20px; }
-    .group h4 { margin: 0 0 10px; font-size: 14px; color: var(--muted); font-weight: 600; }
-    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
-    .chips li { font-size: 14px; padding: 6px 12px; border-radius: 8px; background: var(--accent-soft); color: var(--text); }
-
-    .tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
-    .tab {
-      flex-shrink: 0; border: 1px solid var(--line); background: var(--surface); color: var(--muted);
-      border-radius: 10px; padding: 8px 12px; cursor: pointer; font-size: 14px; font-weight: 600; text-align: left;
-    }
-    .tab small { display: block; font-family: var(--font-mono); font-weight: 500; font-size: 11px; }
-    .tab[aria-selected="true"] { border-color: var(--accent); color: var(--text); background: var(--accent-soft); }
-    .job-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; align-items: baseline; }
-    .job h4 { margin: 0; font-size: 18px; letter-spacing: -.01em; }
-    .job ul { margin: 12px 0 0; padding-left: 18px; }
-    .job li { margin-bottom: 6px; }
-    .job li::marker { color: var(--muted); }
-    .highlight { border: 1px solid var(--accent); background: var(--accent-soft); padding: 12px 14px; border-radius: 10px; margin: 14px 0 0; font-size: 15px; }
-    .tags { margin-top: 14px; }
-    .tags .chips li { font-size: 12px; padding: 3px 9px; background: transparent; border: 1px solid var(--line); color: var(--muted); }
 
     footer { padding: 28px 0 40px; color: var(--muted); font-size: 13px; text-align: center; border-top: 1px solid var(--line); }
   </style>
@@ -206,8 +187,8 @@
     <div class="wrap">
       <a class="brand" href="#top">Branel<span>.</span></a>
       <nav aria-label="Main">
-        <button class="nav-link" type="button" data-open="about" aria-controls="about" aria-expanded="false">About</button>
-        <button class="nav-link" type="button" data-open="skills" aria-controls="skills" aria-expanded="false">Skills</button>
+        <button class="nav-link" type="button" data-open="about">About</button>
+        <button class="nav-link" type="button" data-open="skills">Skills</button>
         <button class="nav-link" type="button" data-open="experience">Experience</button>
         <button class="theme-btn" id="themeBtn" type="button" aria-label="Toggle dark mode">◐</button>
       </nav>
@@ -231,170 +212,168 @@
         </div>
       </div>
     </div>
-
-    <section id="about" class="panel" hidden aria-label="About">
-      <div class="wrap">
-        <div class="section-head">
-          <h2>About</h2>
-          <span class="dates count">1 / 4</span>
-        </div>
-        <div class="carousel" aria-roledescription="carousel" aria-label="About">
-          <div class="viewport">
-          <div class="track">
-            <div class="slide" role="group" aria-roledescription="slide" aria-label="1 of 4">
-              <div class="slide-label">Summary</div>
-              <h3>Keeping people and systems running</h3>
-              <p>I provide remote and onsite technical support for hospitality, education and POS systems. I mostly work through remote tools like AnyDesk, TeamViewer and Splashtop, and I write clear guides so users can solve problems themselves.</p>
-            </div>
-            <div class="slide" role="group" aria-roledescription="slide" aria-label="2 of 4">
-              <div class="slide-label">Highlights</div>
-              <h3>At a glance</h3>
-              <div class="stats">
-                <div class="stat"><b>3+ years</b><span>in IT support roles</span></div>
-                <div class="stat"><b>3 industries</b><span>Hospitality, education, POS</span></div>
-                <div class="stat"><b>5+ F&amp;B groups</b><span>helped with data fixes</span></div>
-              </div>
-            </div>
-            <div class="slide" role="group" aria-roledescription="slide" aria-label="3 of 4">
-              <div class="slide-label">Core competencies</div>
-              <h3>How I work</h3>
-              <ul>
-                <li>Collaboration and communication</li>
-                <li>Independent, and also a team player</li>
-                <li>Customer support and communication</li>
-                <li>Technical documentation and user guides</li>
-              </ul>
-            </div>
-            <div class="slide" role="group" aria-roledescription="slide" aria-label="4 of 4">
-              <div class="slide-label">Education</div>
-              <h3>Where I studied</h3>
-              <div class="edu-row">
-                <div>
-                  <strong>Diploma in Information Technology</strong>
-                  <div class="company">Republic Polytechnic</div>
-                </div>
-                <span class="dates">2016 – 2019</span>
-              </div>
-            </div>
-          </div>
-          </div>
-          <div class="controls">
-            <div class="dots"></div>
-            <div class="arrows">
-              <button class="arrow prev" type="button" aria-label="Previous slide">‹</button>
-              <button class="arrow next" type="button" aria-label="Next slide">›</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="skills" class="panel" hidden aria-label="Technical skills">
-      <div class="wrap">
-        <div class="section-head">
-          <h2>Technical skills</h2>
-          <span class="dates count">1 / 3</span>
-        </div>
-        <div class="carousel" aria-roledescription="carousel" aria-label="Technical skills">
-          <div class="viewport">
-          <div class="track">
-            <div class="slide" role="group" aria-roledescription="slide" aria-label="1 of 3">
-              <div class="slide-label">Skill set 1</div>
-              <h3>Support &amp; remote access</h3>
-              <ul class="chips">
-                <li>IT Support (Remote &amp; Onsite)</li><li>Helpdesk / Ticketing</li><li>AnyDesk</li>
-                <li>TeamViewer</li><li>Splashtop</li><li>UltraViewer</li><li>Zoom</li>
-              </ul>
-            </div>
-            <div class="slide" role="group" aria-roledescription="slide" aria-label="2 of 3">
-              <div class="slide-label">Skill set 2</div>
-              <h3>Systems &amp; data</h3>
-              <ul class="chips">
-                <li>Active Directory</li><li>Windows OS Installation &amp; Imaging</li><li>SQL Server Management Studio</li>
-                <li>MSSQL</li><li>Visual FoxPro</li><li>Oracle (user accounts)</li><li>Apache</li>
-              </ul>
-            </div>
-            <div class="slide" role="group" aria-roledescription="slide" aria-label="3 of 3">
-              <div class="slide-label">Skill set 3</div>
-              <h3>Productivity</h3>
-              <ul class="chips">
-                <li>Microsoft Excel</li><li>Word</li><li>Outlook</li><li>Publisher</li><li>Teams</li><li>Google Drive</li>
-              </ul>
-            </div>
-          </div>
-          </div>
-          <div class="controls">
-            <div class="dots"></div>
-            <div class="arrows">
-              <button class="arrow prev" type="button" aria-label="Previous slide">‹</button>
-              <button class="arrow next" type="button" aria-label="Next slide">›</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
   </main>
 
-  <!-- Experience pop-up -->
-  <dialog id="experience" aria-labelledby="expTitle">
+  <dialog id="about" aria-labelledby="aboutTitle">
     <div class="dlg-head">
-      <h3 id="expTitle">Work experience</h3>
-      <button class="close" type="button" data-close aria-label="Close">×</button>
-    </div>
-    <div class="dlg-body">
-      <div class="tabs" role="tablist">
-        <button class="tab" role="tab" type="button" aria-selected="true" aria-controls="job1" id="tab1">Epoint System<small>2024 – 2026</small></button>
-        <button class="tab" role="tab" type="button" aria-selected="false" aria-controls="job2" id="tab2">Dao By Dorsett<small>2023 – 2024</small></button>
-        <button class="tab" role="tab" type="button" aria-selected="false" aria-controls="job3" id="tab3">Absolute Kinetic<small>2021 – 2023</small></button>
+      <h3 id="aboutTitle">About me</h3>
+      <div class="dlg-tools">
+        <span class="dates count">1 / 4</span>
+        <button class="close" type="button" data-close aria-label="Close">×</button>
       </div>
-
-      <article class="job" role="tabpanel" id="job1" aria-labelledby="tab1">
-        <div class="job-head">
-          <h4>Customer Service Engineer</h4>
-          <span class="dates">Aug 2024 – May 2026</span>
+    </div>
+    <div class="carousel" aria-roledescription="carousel" aria-label="About me">
+      <div class="viewport">
+        <div class="track">
+          <div class="slide" role="group" aria-roledescription="slide" aria-label="1 of 4">
+            <div class="slide-label">Summary</div>
+            <h3>Keeping people and systems running</h3>
+            <p>I provide remote and onsite technical support for hospitality, education and POS systems. I mostly work through remote tools like AnyDesk, TeamViewer and Splashtop, and I write clear guides so users can solve problems themselves.</p>
+          </div>
+          <div class="slide" role="group" aria-roledescription="slide" aria-label="2 of 4">
+            <div class="slide-label">Highlights</div>
+            <h3>At a glance</h3>
+            <div class="stats">
+              <div class="stat"><b>3+ years</b><span>in IT support roles</span></div>
+              <div class="stat"><b>3 industries</b><span>Hospitality, education, POS</span></div>
+              <div class="stat"><b>5+ F&amp;B groups</b><span>helped with data fixes</span></div>
+            </div>
+          </div>
+          <div class="slide" role="group" aria-roledescription="slide" aria-label="3 of 4">
+            <div class="slide-label">Core competencies</div>
+            <h3>How I work</h3>
+            <ul class="list">
+              <li>Collaboration and communication</li>
+              <li>Independent, and also a team player</li>
+              <li>Customer support and communication</li>
+              <li>Technical documentation and user guides</li>
+            </ul>
+          </div>
+          <div class="slide" role="group" aria-roledescription="slide" aria-label="4 of 4">
+            <div class="slide-label">Education</div>
+            <h3>Where I studied</h3>
+            <div class="edu-row">
+              <div>
+                <strong>Diploma in Information Technology</strong>
+                <div class="company">Republic Polytechnic</div>
+              </div>
+              <span class="dates">2016 – 2019</span>
+            </div>
+          </div>
         </div>
-        <div class="company">Epoint System Pte Ltd</div>
-        <ul>
-          <li>Resolved client system and network issues.</li>
-          <li>Analysed transaction logs for GrabFood and Foodpanda.</li>
-          <li>Supported clients over WhatsApp chat.</li>
-          <li>Proposed a real-time database sync between a client and the company database.</li>
-          <li>Gave the Head of Software an implementation plan for BCRS.</li>
-        </ul>
-        <p class="highlight"><strong>Key win:</strong> Found and fixed recurring duplicate receipt records with SSMS and Visual FoxPro. This improved data accuracy, supported PDPA compliance and lowered patching fees for clients such as BreadTalk Group, Tian Ma Group, Soup Restaurant, Paradise Group and Mr Bean.</p>
-        <div class="tags"><ul class="chips"><li>SSMS</li><li>Visual FoxPro</li><li>POS</li><li>PDPA</li></ul></div>
-      </article>
-
-      <article class="job" role="tabpanel" id="job2" aria-labelledby="tab2" hidden>
-        <div class="job-head">
-          <h4>IT Executive</h4>
-          <span class="dates">Oct 2023 – Jan 2024</span>
+      </div>
+      <div class="controls">
+        <div class="dots"></div>
+        <div class="arrows">
+          <button class="arrow prev" type="button" aria-label="Previous slide">‹</button>
+          <button class="arrow next" type="button" aria-label="Next slide">›</button>
         </div>
-        <div class="company">Dao By Dorsett</div>
-        <ul>
-          <li>Gave internal staff Level 1 IT support.</li>
-          <li>Created and managed user accounts and access in Oracle for new staff.</li>
-          <li>Updated the weekly F&amp;B menu on request.</li>
-        </ul>
-        <div class="tags"><ul class="chips"><li>Level 1 support</li><li>Oracle</li><li>Hospitality</li></ul></div>
-      </article>
+      </div>
+    </div>
+  </dialog>
 
-      <article class="job" role="tabpanel" id="job3" aria-labelledby="tab3" hidden>
-        <div class="job-head">
-          <h4>IT Support Specialist</h4>
-          <span class="dates">Aug 2021 – May 2023</span>
+  <dialog id="skills" aria-labelledby="skillsTitle">
+    <div class="dlg-head">
+      <h3 id="skillsTitle">Technical skills</h3>
+      <div class="dlg-tools">
+        <span class="dates count">1 / 3</span>
+        <button class="close" type="button" data-close aria-label="Close">×</button>
+      </div>
+    </div>
+    <div class="carousel" aria-roledescription="carousel" aria-label="Technical skills">
+      <div class="viewport">
+        <div class="track">
+          <div class="slide" role="group" aria-roledescription="slide" aria-label="1 of 3">
+            <div class="slide-label">Skill set 1</div>
+            <h3>Support &amp; remote access</h3>
+            <ul class="chips">
+              <li>IT Support (Remote &amp; Onsite)</li><li>Helpdesk / Ticketing</li><li>AnyDesk</li>
+              <li>TeamViewer</li><li>Splashtop</li><li>UltraViewer</li><li>Zoom</li>
+            </ul>
+          </div>
+          <div class="slide" role="group" aria-roledescription="slide" aria-label="2 of 3">
+            <div class="slide-label">Skill set 2</div>
+            <h3>Systems &amp; data</h3>
+            <ul class="chips">
+              <li>Active Directory</li><li>Windows OS Installation &amp; Imaging</li><li>SQL Server Management Studio</li>
+              <li>MSSQL</li><li>Visual FoxPro</li><li>Oracle (user accounts)</li><li>Apache</li>
+            </ul>
+          </div>
+          <div class="slide" role="group" aria-roledescription="slide" aria-label="3 of 3">
+            <div class="slide-label">Skill set 3</div>
+            <h3>Productivity</h3>
+            <ul class="chips">
+              <li>Microsoft Excel</li><li>Word</li><li>Outlook</li><li>Publisher</li><li>Teams</li><li>Google Drive</li>
+            </ul>
+          </div>
         </div>
-        <div class="company">Absolute Kinetic Consultancy Pte Ltd</div>
-        <ul>
-          <li>Helped learners fix technical issues over Zoom during live lessons.</li>
-          <li>Handled onsite IT requests.</li>
-          <li>Imaged laptops and workstations, and set up Active Directory accounts for new staff.</li>
-          <li>Built a mobile-friendly microlearning portal on Apache.</li>
-          <li>Wrote user manuals and step-by-step guides for internal and external systems.</li>
-          <li>Fixed a data duplication issue with MSSQL and Visual FoxPro.</li>
-        </ul>
-        <div class="tags"><ul class="chips"><li>Active Directory</li><li>Imaging</li><li>Apache</li><li>Documentation</li></ul></div>
-      </article>
+      </div>
+      <div class="controls">
+        <div class="dots"></div>
+        <div class="arrows">
+          <button class="arrow prev" type="button" aria-label="Previous slide">‹</button>
+          <button class="arrow next" type="button" aria-label="Next slide">›</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="experience" aria-labelledby="experienceTitle">
+    <div class="dlg-head">
+      <h3 id="experienceTitle">Work experience</h3>
+      <div class="dlg-tools">
+        <span class="dates count">1 / 3</span>
+        <button class="close" type="button" data-close aria-label="Close">×</button>
+      </div>
+    </div>
+    <div class="carousel" aria-roledescription="carousel" aria-label="Work experience">
+      <div class="viewport">
+        <div class="track">
+          <div class="slide" role="group" aria-roledescription="slide" aria-label="1 of 3">
+            <div class="slide-label">Aug 2024 – May 2026</div>
+            <h3>Customer Service Engineer</h3>
+            <div class="company">Epoint System Pte Ltd</div>
+            <ul class="list">
+              <li>Resolved client system and network issues.</li>
+              <li>Analysed transaction logs for GrabFood and Foodpanda.</li>
+              <li>Supported clients over WhatsApp chat.</li>
+              <li>Proposed a real-time database sync between a client and the company database.</li>
+              <li>Gave the Head of Software an implementation plan for BCRS.</li>
+            </ul>
+            <p class="highlight"><strong>Key win:</strong> Found and fixed recurring duplicate receipt records with SSMS and Visual FoxPro. This improved data accuracy, supported PDPA compliance and lowered patching fees for clients such as BreadTalk Group, Tian Ma Group, Soup Restaurant, Paradise Group and Mr Bean.</p>
+          </div>
+          <div class="slide" role="group" aria-roledescription="slide" aria-label="2 of 3">
+            <div class="slide-label">Oct 2023 – Jan 2024</div>
+            <h3>IT Executive</h3>
+            <div class="company">Dao By Dorsett</div>
+            <ul class="list">
+              <li>Gave internal staff Level 1 IT support.</li>
+              <li>Created and managed user accounts and access in Oracle for new staff.</li>
+              <li>Updated the weekly F&amp;B menu on request.</li>
+            </ul>
+          </div>
+          <div class="slide" role="group" aria-roledescription="slide" aria-label="3 of 3">
+            <div class="slide-label">Aug 2021 – May 2023</div>
+            <h3>IT Support Specialist</h3>
+            <div class="company">Absolute Kinetic Consultancy Pte Ltd</div>
+            <ul class="list">
+              <li>Helped learners fix technical issues over Zoom during live lessons.</li>
+              <li>Handled onsite IT requests.</li>
+              <li>Imaged laptops and workstations, and set up Active Directory accounts for new staff.</li>
+              <li>Built a mobile-friendly microlearning portal on Apache.</li>
+              <li>Wrote user manuals and step-by-step guides for internal and external systems.</li>
+              <li>Fixed a data duplication issue with MSSQL and Visual FoxPro.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="dots"></div>
+        <div class="arrows">
+          <button class="arrow prev" type="button" aria-label="Previous slide">‹</button>
+          <button class="arrow next" type="button" aria-label="Next slide">›</button>
+        </div>
+      </div>
     </div>
   </dialog>
 
@@ -425,14 +404,13 @@
         else { btn.textContent = 'Select the email to copy'; }
       });
 
-      // Sliders (About and Skills)
-      function makeCarousel(section) {
-        var box = section.querySelector('.carousel');
-        var vp = box.querySelector('.viewport');
-        var track = box.querySelector('.track');
+      // Sliders inside each pop-up
+      function makeCarousel(dlg) {
+        var vp = dlg.querySelector('.viewport');
+        var track = dlg.querySelector('.track');
         var slides = track.children;
-        var dotsBox = box.querySelector('.dots');
-        var countEl = section.querySelector('.count');
+        var dotsBox = dlg.querySelector('.dots');
+        var countEl = dlg.querySelector('.count');
         var index = 0;
         Array.prototype.forEach.call(slides, function (_, n) {
           var d = document.createElement('button');
@@ -441,16 +419,18 @@
           d.addEventListener('click', function () { go(n); });
           dotsBox.appendChild(d);
         });
+        function fit() { vp.style.height = slides[index].offsetHeight + 'px'; }
         function go(n) {
           index = (n + slides.length) % slides.length;
           track.style.transform = 'translateX(' + (-100 * index) + '%)';
           Array.prototype.forEach.call(dotsBox.children, function (d, k) { d.setAttribute('aria-current', k === index ? 'true' : 'false'); });
           Array.prototype.forEach.call(slides, function (s, k) { s.setAttribute('aria-hidden', k === index ? 'false' : 'true'); });
           countEl.textContent = (index + 1) + ' / ' + slides.length;
+          fit();
         }
-        box.querySelector('.prev').addEventListener('click', function () { go(index - 1); });
-        box.querySelector('.next').addEventListener('click', function () { go(index + 1); });
-        box.addEventListener('keydown', function (e) {
+        dlg.querySelector('.prev').addEventListener('click', function () { go(index - 1); });
+        dlg.querySelector('.next').addEventListener('click', function () { go(index + 1); });
+        dlg.addEventListener('keydown', function (e) {
           if (e.key === 'ArrowLeft') go(index - 1);
           if (e.key === 'ArrowRight') go(index + 1);
         });
@@ -461,51 +441,28 @@
           var dx = e.clientX - startX; startX = null;
           if (Math.abs(dx) > 40) go(index + (dx < 0 ? 1 : -1));
         });
-        // Keep the slide strip from being scrolled sideways by the browser
         vp.addEventListener('scroll', function () { vp.scrollLeft = 0; });
-        go(0);
+        window.addEventListener('resize', function () { if (dlg.open) fit(); });
+        dlg.reset = function () { go(0); };
       }
-      document.querySelectorAll('.panel').forEach(makeCarousel);
-
-      function showSection(id) {
-        var sec = document.getElementById(id);
-        sec.hidden = false;
-        document.querySelectorAll('[aria-controls="' + id + '"]').forEach(function (b) { b.setAttribute('aria-expanded', 'true'); });
-        sec.scrollIntoView({ block: 'start' });
-      }
+      document.querySelectorAll('dialog').forEach(makeCarousel);
 
       // Pop-ups
       function openDialog(id) {
         var d = document.getElementById(id);
-        if (d && !d.open) d.showModal();
+        if (d && !d.open) { d.showModal(); d.reset(); }
       }
       document.querySelectorAll('[data-open]').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          var target = btn.getAttribute('data-open');
-          if (target === 'about' || target === 'skills') showSection(target); else openDialog(target);
-        });
+        btn.addEventListener('click', function () { openDialog(btn.getAttribute('data-open')); });
       });
       document.querySelectorAll('dialog').forEach(function (d) {
         d.querySelector('[data-close]').addEventListener('click', function () { d.close(); });
         d.addEventListener('click', function (e) { if (e.target === d) d.close(); }); // click outside
       });
 
-      // Experience tabs
-      var tabs = document.querySelectorAll('.tab');
-      tabs.forEach(function (tab) {
-        tab.addEventListener('click', function () {
-          tabs.forEach(function (t) {
-            var on = t === tab;
-            t.setAttribute('aria-selected', on ? 'true' : 'false');
-            document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
-          });
-        });
-      });
-
       // Open a view from the link, e.g. #skills
       var h = location.hash.slice(1);
-      if (h === 'about' || h === 'skills') showSection(h);
-      else if (h === 'experience') openDialog(h);
+      if (h === 'about' || h === 'skills' || h === 'experience') openDialog(h);
     })();
   </script>
 </body>
