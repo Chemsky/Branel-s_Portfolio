@@ -563,7 +563,7 @@
           method: 'POST',
           signal: ctrl ? ctrl.signal : undefined,
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify({ access_key: WEB3FORMS_KEY, subject: subject, from_name: 'Branel Ong Portfolio', name: name, email: email, replyto: email, message: msg })
+          body: JSON.stringify({ access_key: WEB3FORMS_KEY, subject: subject, from_name: name + ' (via portfolio)', name: name, email: email, replyto: email, message: msg })
         }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
           .then(function (res) {
             if (!res.ok || res.d.success !== true) throw new Error(res.d.message || 'Send failed');
