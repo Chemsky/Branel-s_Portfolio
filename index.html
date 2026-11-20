@@ -9,21 +9,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
   <style>
-    /* Layout: minimalist monochrome. One quiet home screen; each section opens in a plain pop-up. */
+    /* Layout: minimalist, blue accent. One quiet home screen; each section opens in a plain pop-up. */
     :root {
-      --bg: #ffffff;
+      --bg: #f7f8fa;
       --surface: #ffffff;
-      --text: #111111;
-      --muted: #737373;
-      --line: #e7e7e7;
-      --accent: #111111;
-      --accent-soft: #f4f4f4;
+      --text: #14171c;
+      --muted: #5b6370;
+      --line: #e3e6eb;
+      --accent: #1f6feb;
+      --accent-soft: #e8f0fe;
       --on-accent: #ffffff;
-      --scrim: rgba(255, 255, 255, .7);
+      --scrim: rgba(14, 17, 22, .35);
       --glow-a: #ffffff;
       --glow-b: #ffffff;
       --glass: transparent;
-      --glass-line: #e7e7e7;
+      --glass-line: #e3e6eb;
       --radius: 14px;
       --shadow: 0 1px 2px rgba(20,23,28,.04), 0 4px 16px rgba(20,23,28,.05);
       --font-body: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -31,37 +31,37 @@
     }
     @media (prefers-color-scheme: dark) {
       :root:not([data-theme="light"]) {
-        --bg: #0d0d0d;
-        --surface: #0d0d0d;
-        --text: #ededed;
-        --muted: #8c8c8c;
-        --line: #262626;
-        --accent: #ededed;
-        --accent-soft: #1a1a1a;
-        --on-accent: #0d0d0d;
-        --scrim: rgba(13, 13, 13, .75);
-        --glow-a: #0d0d0d;
-        --glow-b: #0d0d0d;
+        --bg: #0e1116;
+        --surface: #161b22;
+        --text: #e6e9ee;
+        --muted: #9aa4b2;
+        --line: #262d37;
+        --accent: #5b9dff;
+        --accent-soft: #15233a;
+        --on-accent: #0b1220;
+        --scrim: rgba(0, 0, 0, .6);
+        --glow-a: #161b22;
+        --glow-b: #161b22;
         --glass: transparent;
-        --glass-line: #262626;
+        --glass-line: #262d37;
         --shadow: none;
         color-scheme: dark;
       }
     }
     :root[data-theme="dark"] {
-      --bg: #0d0d0d;
-      --surface: #0d0d0d;
-      --text: #ededed;
-      --muted: #8c8c8c;
-      --line: #262626;
-      --accent: #ededed;
-      --accent-soft: #1a1a1a;
-      --on-accent: #0d0d0d;
-      --scrim: rgba(13, 13, 13, .75);
-      --glow-a: #0d0d0d;
-      --glow-b: #0d0d0d;
+      --bg: #0e1116;
+      --surface: #161b22;
+      --text: #e6e9ee;
+      --muted: #9aa4b2;
+      --line: #262d37;
+      --accent: #5b9dff;
+      --accent-soft: #15233a;
+      --on-accent: #0b1220;
+      --scrim: rgba(0, 0, 0, .6);
+      --glow-a: #161b22;
+      --glow-b: #161b22;
       --glass: transparent;
-      --glass-line: #262626;
+      --glass-line: #262d37;
       --shadow: none;
       color-scheme: dark;
     }
@@ -222,7 +222,7 @@
     h1 { font-weight: 600; }
     .lead { margin-bottom: 40px; }
     .link { font-weight: 500; border-bottom-width: 1px; }
-    .link:hover { color: var(--text); border-color: var(--text); }
+    .link:hover { color: var(--accent); border-color: var(--accent); }
     .btn { border-radius: 999px; font-weight: 500; padding: 10px 22px; }
     .btn:hover { filter: none; opacity: .85; }
     dialog { border-radius: 4px; box-shadow: none; border-color: var(--line); }
@@ -232,35 +232,35 @@
     .dlg-head { border-bottom: 0; padding-top: 22px; padding-bottom: 4px; }
     .dlg-head h3 { font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: .14em; color: var(--muted); }
     .close, .arrow { border: 0; background: none; color: var(--muted); border-radius: 4px; }
-    .close:hover, .arrow:hover { color: var(--text); background: none; }
-    .slide-label { color: var(--muted); }
+    .close:hover, .arrow:hover { color: var(--accent); background: none; }
+    .slide-label { color: var(--accent); }
     .slide h3 { font-weight: 600; }
     .company { color: var(--muted); font-weight: 400; }
-    .list li::marker { color: var(--muted); }
+    .list li::marker { color: var(--accent); }
     .chips { display: block; columns: 2; column-gap: 32px; }
     .chips li { background: none; padding: 7px 0; border-radius: 0; font-size: 15px; border-bottom: 1px solid var(--line); break-inside: avoid; }
     @media (max-width: 560px) { .chips { columns: 1; } }
     .stat b { color: var(--text); font-weight: 600; }
     .dot { width: 6px; height: 6px; background: var(--line); }
-    .dot[aria-current="true"] { width: 18px; background: var(--text); }
-    #contact { background: var(--bg); border-color: var(--line); }
+    .dot[aria-current="true"] { width: 18px; background: var(--accent); }
+    #contact { background: var(--surface); border-color: var(--line); }
     #contact .close { background: none; border: 0; }
     .contact h3 { font-weight: 600; margin-bottom: 24px; }
     .eyebrow-c, .contact h3 { text-align: center; }
     .email-line { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
     .email-line .email-row { margin: 0 0 0 auto; }
     .glass-btn { backdrop-filter: none; border-radius: 999px; border-color: var(--line); font-weight: 500; }
-    .glass-btn:hover { border-color: var(--text); }
-    .link-btn { color: var(--text); text-decoration: underline; text-underline-offset: 3px; font-weight: 500; }
+    .glass-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .link-btn { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; font-weight: 500; }
     .field input, .field textarea {
       backdrop-filter: none; background: transparent; border: 0; border-bottom: 1px solid var(--line);
       border-radius: 0; padding: 10px 0;
     }
     .field textarea { min-height: 110px; }
-    .field input:focus, .field textarea:focus { border-color: var(--text); box-shadow: none; }
+    .field input:focus, .field textarea:focus { border-color: var(--accent); box-shadow: none; }
     .field label { font-size: 13px; color: var(--muted); }
-    .fallback a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
-    :focus-visible { outline-color: var(--text); }
+    .fallback a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+    :focus-visible { outline-color: var(--accent); }
   </style>
 </head>
 <body>
@@ -548,7 +548,7 @@
         var name = form.name.value.trim(), email = form.email.value.trim(), msg = form.message.value.trim();
         if (!name || !email || !msg || !form.email.checkValidity()) {
           note.textContent = !name ? 'Please enter your name.' : (!email || !form.email.checkValidity()) ? 'Please enter a valid email address.' : 'Please write a short message.';
-          note.style.color = 'var(--text)';
+          note.style.color = 'var(--accent)';
           (!name ? form.name : (!email || !form.email.checkValidity()) ? form.email : form.message).focus();
           return;
         }
