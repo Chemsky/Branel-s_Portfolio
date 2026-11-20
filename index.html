@@ -19,12 +19,18 @@
       --accent: #1f6feb;
       --accent-soft: #e8f0fe;
       --on-accent: #ffffff;
-      --page: #1f2b3e;
-      --page-text: #f1f4f9;
-      --page-muted: #b4c0d6;
-      --page-line: rgba(255, 255, 255, .35);
-      --page-accent: #6aa6ff;
-      --page-on-accent: #0b1220;
+      --page: #e6e6f1;
+      --ring-1: #eeeef6;
+      --ring-2: #f3f3f9;
+      --ring-3: #f7f7fb;
+      --ring-4: #fbfbfd;
+      --ring-core: #ffffff;
+      --ring-shadow: rgba(88, 88, 140, .16);
+      --page-text: #14171c;
+      --page-muted: #5b6370;
+      --page-line: rgba(20, 23, 28, .2);
+      --page-accent: #1f6feb;
+      --page-on-accent: #ffffff;
       --scrim: rgba(14, 17, 22, .45);
       --radius: 14px;
       --shadow: 0 1px 2px rgba(20,23,28,.04), 0 4px 16px rgba(20,23,28,.05);
@@ -90,9 +96,18 @@
     .theme-btn:hover { color: var(--text); background: var(--accent-soft); }
     main.home { min-height: 100dvh; display: flex; align-items: center; }
     .hero { max-width: 560px; margin: 0 auto; padding-block: 64px; text-align: center; }
-    /* Wave background (home page) */
-    .bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-    .bg svg { width: 100%; height: 100%; display: block; }
+    /* Ring background (home page): concentric soft circles, content sits in the white centre */
+    .bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; background: var(--page); --d: max(440px, 60vmin); }
+    .ring {
+      position: absolute; left: 50%; top: 50%; border-radius: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 6px 28px var(--ring-shadow), inset 0 1px 0 rgba(255,255,255,.8);
+    }
+    .ring.r5 { width: calc(var(--d) * 1.62); height: calc(var(--d) * 1.62); background: var(--ring-1); }
+    .ring.r4 { width: calc(var(--d) * 1.46); height: calc(var(--d) * 1.46); background: var(--ring-2); }
+    .ring.r3 { width: calc(var(--d) * 1.31); height: calc(var(--d) * 1.31); background: var(--ring-3); }
+    .ring.r2 { width: calc(var(--d) * 1.15); height: calc(var(--d) * 1.15); background: var(--ring-4); }
+    .ring.r1 { width: var(--d); height: var(--d); background: var(--ring-core); }
     main.home { position: relative; z-index: 1; }
     main.home h1 { color: var(--page-text); }
     main.home .lead { color: var(--page-muted); }
@@ -100,8 +115,7 @@
     main.home .link:hover { color: var(--page-accent); border-color: var(--page-accent); }
     main.home .btn.primary { background: var(--page-accent); border-color: var(--page-accent); color: var(--page-on-accent); }
     .theme-btn { color: var(--page-muted) !important; }
-    .theme-btn:hover { color: var(--page-text) !important; background: rgba(255,255,255,.1) !important; }
-    @media (max-width: 640px) { .bg svg { opacity: .7; } }
+    .theme-btn:hover { color: var(--page-text) !important; background: rgba(20,23,28,.06) !important; }
     h1 { font-size: clamp(36px, 7vw, 52px); line-height: 1.08; letter-spacing: -.03em; margin: 0 0 10px; text-wrap: balance; }
     .lead { font-size: clamp(17px, 2.4vw, 19px); color: var(--muted); margin: 0 0 36px; }
     .links { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 28px; margin: 0 0 36px; padding: 0; list-style: none; }
@@ -222,20 +236,11 @@
   <button class="theme-btn" id="themeBtn" type="button" aria-label="Toggle dark mode">◐</button>
 
   <div class="bg" aria-hidden="true">
-    <svg viewBox="0 0 1600 1000" preserveAspectRatio="xMinYMid slice" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <filter id="sh" x="-10%" y="-10%" width="130%" height="120%">
-          <feDropShadow dx="14" dy="0" stdDeviation="16" flood-color="#0b111c" flood-opacity=".55"/>
-        </filter>
-      </defs>
-      <rect width="1600" height="1000" fill="#1f2b3e"/>
-      <path d="M0,-40 L722,-40 Q722,-40 732,-29 Q743,-18 754,-6 Q765,5 776,16 Q787,28 797,39 Q807,50 815,61 Q823,72 829,84 Q835,95 839,106 Q842,118 843,129 Q844,140 842,151 Q841,162 838,174 Q834,185 830,196 Q825,208 820,219 Q814,230 809,241 Q804,252 800,264 Q795,275 792,286 Q788,298 786,309 Q783,320 782,331 Q781,342 781,354 Q781,365 781,376 Q781,388 782,399 Q782,410 781,421 Q781,432 779,444 Q778,455 775,466 Q772,478 767,489 Q762,500 756,511 Q750,522 742,534 Q734,545 726,556 Q717,568 709,579 Q700,590 693,601 Q685,612 678,624 Q672,635 668,646 Q663,658 662,669 Q660,680 661,691 Q662,702 666,714 Q670,725 677,736 Q683,748 691,759 Q700,770 710,781 Q720,792 730,804 Q740,815 750,826 Q760,838 769,849 Q778,860 785,871 Q793,882 798,894 Q803,905 807,916 Q810,928 811,939 Q812,950 812,961 Q812,972 810,984 Q809,995 807,1006 Q805,1018 803,1029 L801,1040 L0,1040 Z" fill="#26344d" filter="url(#sh)"/>
-      <path d="M0,-40 L732,-40 Q732,-40 737,-29 Q742,-18 744,-6 Q746,5 745,16 Q744,28 740,39 Q736,50 730,61 Q724,72 717,84 Q710,95 702,106 Q694,118 687,129 Q680,140 673,151 Q667,162 662,174 Q657,185 653,196 Q650,208 648,219 Q646,230 645,241 Q645,252 645,264 Q644,275 644,286 Q644,298 644,309 Q643,320 641,331 Q639,342 636,354 Q632,365 627,376 Q622,388 616,399 Q609,410 601,421 Q594,432 585,444 Q577,455 569,466 Q561,478 554,489 Q547,500 541,511 Q536,522 534,534 Q531,545 532,556 Q532,568 535,579 Q539,590 546,601 Q552,612 562,624 Q571,635 582,646 Q593,658 606,669 Q618,680 630,691 Q643,702 654,714 Q666,725 676,736 Q686,748 693,759 Q701,770 706,781 Q711,792 713,804 Q716,815 716,826 Q716,838 714,849 Q712,860 709,871 Q706,882 702,894 Q699,905 695,916 Q691,928 689,939 Q686,950 684,961 Q683,972 682,984 Q682,995 682,1006 Q683,1018 685,1029 L686,1040 L0,1040 Z" fill="#2d3d5a" filter="url(#sh)"/>
-      <path d="M0,-40 L628,-40 Q628,-40 620,-29 Q612,-18 603,-6 Q593,5 584,16 Q574,28 566,39 Q557,50 549,61 Q542,72 536,84 Q530,95 527,106 Q523,118 521,129 Q519,140 518,151 Q517,162 517,174 Q517,185 517,196 Q517,208 516,219 Q516,230 514,241 Q512,252 509,264 Q506,275 501,286 Q496,298 490,309 Q484,320 476,331 Q469,342 462,354 Q454,365 447,376 Q440,388 435,399 Q429,410 426,421 Q422,432 422,444 Q421,455 424,466 Q427,478 433,489 Q438,500 447,511 Q456,522 467,534 Q479,545 492,556 Q505,568 518,579 Q532,590 545,601 Q558,612 570,624 Q582,635 591,646 Q601,658 608,669 Q614,680 618,691 Q622,702 623,714 Q624,725 622,736 Q620,748 617,759 Q613,770 608,781 Q603,792 598,804 Q592,815 587,826 Q582,838 578,849 Q574,860 571,871 Q569,882 567,894 Q566,905 566,916 Q566,928 566,939 Q567,950 568,961 Q569,972 569,984 Q569,995 569,1006 Q568,1018 565,1029 L563,1040 L0,1040 Z" fill="#354868" filter="url(#sh)"/>
-      <path d="M0,-40 L428,-40 Q428,-40 420,-29 Q412,-18 406,-6 Q400,5 396,16 Q392,28 390,39 Q388,50 388,61 Q387,72 388,84 Q388,95 389,106 Q389,118 389,129 Q389,140 388,151 Q387,162 384,174 Q381,185 377,196 Q373,208 367,219 Q362,230 355,241 Q349,252 343,264 Q336,275 331,286 Q325,298 321,309 Q318,320 316,331 Q315,342 316,354 Q318,365 323,376 Q328,388 336,399 Q344,410 355,421 Q366,432 379,444 Q392,455 406,466 Q420,478 434,489 Q449,500 462,511 Q476,522 487,534 Q498,545 507,556 Q516,568 521,579 Q526,590 529,601 Q531,612 529,624 Q528,635 524,646 Q521,658 515,669 Q509,680 502,691 Q495,702 488,714 Q481,725 474,736 Q468,748 462,759 Q457,770 453,781 Q449,792 447,804 Q445,815 444,826 Q443,838 443,849 Q443,860 443,871 Q443,882 443,894 Q443,905 442,916 Q440,928 437,939 Q434,950 429,961 Q424,972 416,984 Q409,995 400,1006 Q391,1018 381,1029 L371,1040 L0,1040 Z" fill="#3e5278" filter="url(#sh)"/>
-      <path d="M0,-40 L257,-40 Q257,-40 257,-29 Q257,-18 259,-6 Q260,5 261,16 Q263,28 264,39 Q265,50 264,61 Q264,72 262,84 Q260,95 257,106 Q253,118 249,129 Q244,140 239,151 Q234,162 229,174 Q224,185 220,196 Q216,208 214,219 Q212,230 213,241 Q213,252 217,264 Q221,275 228,286 Q235,298 245,309 Q255,320 267,331 Q280,342 294,354 Q309,365 324,376 Q339,388 353,399 Q368,410 381,421 Q394,432 404,444 Q414,455 421,466 Q429,478 432,489 Q435,500 435,511 Q435,522 431,534 Q428,545 421,556 Q415,568 407,579 Q399,590 390,601 Q381,612 372,624 Q363,635 354,646 Q346,658 340,669 Q333,680 329,691 Q324,702 321,714 Q318,725 317,736 Q315,748 315,759 Q315,770 315,781 Q315,792 314,804 Q314,815 312,826 Q310,838 307,849 Q304,860 298,871 Q293,882 286,894 Q279,905 270,916 Q261,928 251,939 Q242,950 232,961 Q222,972 213,984 Q204,995 197,1006 Q190,1018 186,1029 L182,1040 L0,1040 Z" fill="#485d86" filter="url(#sh)"/>
-      <path d="M0,-40 L149,-40 Q149,-40 150,-29 Q151,-18 151,-6 Q151,5 149,16 Q148,28 145,39 Q142,50 139,61 Q135,72 132,84 Q128,95 125,106 Q122,118 121,129 Q120,140 121,151 Q122,162 125,174 Q129,185 135,196 Q142,208 151,219 Q160,230 172,241 Q184,252 197,264 Q210,275 224,286 Q238,298 251,309 Q264,320 276,331 Q288,342 297,354 Q307,365 313,376 Q320,388 322,399 Q325,410 324,421 Q323,432 319,444 Q315,455 308,466 Q301,478 292,489 Q284,500 274,511 Q264,522 254,534 Q244,545 235,556 Q226,568 219,579 Q211,590 206,601 Q200,612 196,624 Q193,635 191,646 Q189,658 188,669 Q188,680 188,691 Q188,702 188,714 Q187,725 187,736 Q186,748 184,759 Q181,770 178,781 Q174,792 168,804 Q163,815 156,826 Q149,838 141,849 Q133,860 125,871 Q117,882 110,894 Q102,905 97,916 Q91,928 88,939 Q85,950 85,961 Q85,972 88,984 Q91,995 98,1006 Q105,1018 115,1029 L125,1040 L0,1040 Z" fill="#536894" filter="url(#sh)"/>
-    </svg>
+    <span class="ring r5"></span>
+    <span class="ring r4"></span>
+    <span class="ring r3"></span>
+    <span class="ring r2"></span>
+    <span class="ring r1"></span>
   </div>
 
   <main class="home">
