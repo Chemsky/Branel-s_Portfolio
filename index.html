@@ -555,8 +555,11 @@
         var subject = 'Portfolio message from ' + name;
         sendBtn.disabled = true; sendBtn.textContent = 'Sending…';
         setNote('Sending your message…');
+        var ctrl = window.AbortController ? new AbortController() : null;
+        var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 15000);
         fetch('https://formsubmit.co/ajax/' + TO, {
           method: 'POST',
+          signal: ctrl ? ctrl.signal : undefined,
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify({ name: name, email: email, message: msg, _subject: subject, _replyto: email, _template: 'table', _captcha: 'false' })
         }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
@@ -566,11 +569,14 @@
             setNote('Thanks, ' + name + '! Your message has been sent. I\'ll reply to ' + email + '.', 'ok');
             document.getElementById('fallback').hidden = true;
           })
-          .catch(function () {
-            setNote('Sorry, your message could not be sent right now.', 'err');
+          .catch(function (err) {
+            var why = err && err.name === 'AbortError' ? 'Sending took too long.' :
+              (err && /activat/i.test(err.message || '')) ? 'The contact form is waiting to be activated by its owner.' :
+              'Your message could not be sent right now.';
+            setNote('Sorry. ' + why + ' Please use one of the options below.', 'err');
             showFallback(subject, msg + '\n\n— ' + name + '\n' + email);
           })
-          .then(function () { sendBtn.disabled = false; sendBtn.textContent = 'Send message'; });
+          .then(function () { clearTimeout(timer); sendBtn.disabled = false; sendBtn.textContent = 'Send message'; });
       });
 
       // Pop-ups
