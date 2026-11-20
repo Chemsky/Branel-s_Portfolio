@@ -155,7 +155,10 @@
     .email-line { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
     .email-line .btn { justify-self: auto; }
     .mail-choice { display: flex; gap: 10px; justify-content: center; }
-    .mail-choice[hidden] { display: none; }
+    .mail-wrap { display: grid; gap: 8px; justify-items: center; }
+    .mail-wrap[hidden] { display: none; }
+    .mail-hint { margin: 2px 0 0; font-size: 14px; color: var(--muted); }
+    .mail-choice { flex-wrap: wrap; }
     .contact { padding-bottom: 30px; }
     .email-row { display: flex; flex-direction: column; align-items: center; gap: 4px; margin: 0; color: var(--muted); }
     .contact .email { user-select: all; overflow-wrap: anywhere; }
@@ -426,9 +429,12 @@
       <h4 class="contact-title">Let’s work together.</h4>
       <div class="email-line">
         <button class="btn primary" type="button" id="emailMeBtn" aria-expanded="false" aria-controls="mailChoice">Email me <span class="arr">↗</span></button>
-        <div class="mail-choice" id="mailChoice" hidden>
-          <a class="btn" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=BranelOng%40outlook.com&amp;su=Opportunity%20for%20Branel%20Ong" target="_blank" rel="noopener">Gmail</a>
-          <a class="btn" href="https://outlook.live.com/mail/0/deeplink/compose?to=BranelOng%40outlook.com&amp;subject=Opportunity%20for%20Branel%20Ong" target="_blank" rel="noopener">Outlook</a>
+        <div class="mail-wrap" id="mailChoice" hidden>
+          <p class="mail-hint">Send from your own account:</p>
+          <div class="mail-choice">
+          <a class="btn" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=BranelOng%40outlook.com&amp;su=Opportunity%20for%20Branel%20Ong" target="_blank" rel="noopener">Use my Gmail</a>
+          <a class="btn" href="https://outlook.live.com/mail/0/deeplink/compose?to=BranelOng%40outlook.com&amp;subject=Opportunity%20for%20Branel%20Ong" target="_blank" rel="noopener">Use my Outlook</a>
+          </div>
         </div>
         <div class="email-row">
           <span class="email">BranelOng@outlook.com</span>
