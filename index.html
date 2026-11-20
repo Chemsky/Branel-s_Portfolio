@@ -458,10 +458,9 @@
           <label for="cMsg">Message</label>
           <textarea id="cMsg" name="message" required></textarea>
         </div>
-        <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <p class="form-note" id="formNote" role="status">Your message goes straight to my inbox.</p>
-        <button class="btn primary" type="submit" id="sendBtn">Send message</button>
-        <p class="fallback" id="fallback" hidden>You can also <a id="outlookLink" href="#" target="_blank" rel="noopener">send it with Outlook on the web</a> or email BranelOng@outlook.com directly.</p>
+        <p class="form-note" id="formNote" role="status">Opens your email app with the message ready. Just press Send.</p>
+        <button class="btn primary" type="submit" id="sendBtn">Continue in email <span class="arr">↗</span></button>
+        <p class="fallback" id="fallback" hidden>Didn't open? Send it with <a id="gmailLink" href="#" target="_blank" rel="noopener">Gmail</a> or <a id="outlookLink" href="#" target="_blank" rel="noopener">Outlook</a> in your browser instead.</p>
       </form>
     </div>
   </dialog>
@@ -531,19 +530,12 @@
       }
       document.querySelectorAll('dialog').forEach(function (d) { if (d.querySelector('.carousel')) makeCarousel(d); });
 
-      // Contact form: sends the message straight to Branel's inbox through Web3Forms
-      // (this access key is public by design; it only allows sending messages to Branel)
-      var WEB3FORMS_KEY = '7f7e86e6-20f3-487f-9dcf-14d82dd91aae';
+      // Contact form: opens a ready-to-send email in the visitor's own email app,
+      // so the message comes from their real address and replies work normally
       var form = document.getElementById('contactForm');
       var note = document.getElementById('formNote');
-      var sendBtn = document.getElementById('sendBtn');
       var TO = 'BranelOng@outlook.com';
       function setNote(text, kind) { note.textContent = text; note.className = 'form-note' + (kind ? ' ' + kind : ''); }
-      function showFallback(subject, body) {
-        document.getElementById('outlookLink').href = 'https://outlook.live.com/mail/0/deeplink/compose?to=' +
-          encodeURIComponent(TO) + '&subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-        document.getElementById('fallback').hidden = false;
-      }
       form.addEventListener('submit', function (e) {
         e.preventDefault();
         var name = form.name.value.trim(), email = form.email.value.trim(), msg = form.message.value.trim();
@@ -553,31 +545,16 @@
           (!name ? form.name : badEmail ? form.email : form.message).focus();
           return;
         }
-        if (form._honey.value) return; // spam bot
         var subject = 'Portfolio message from ' + name;
-        sendBtn.disabled = true; sendBtn.textContent = 'Sending…';
-        setNote('Sending your message…');
-        var ctrl = window.AbortController ? new AbortController() : null;
-        var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 15000);
-        fetch('https://api.web3forms.com/submit', {
-          method: 'POST',
-          signal: ctrl ? ctrl.signal : undefined,
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify({ access_key: WEB3FORMS_KEY, subject: subject, from_name: name + ' (via portfolio)', name: name, email: email, replyto: email, message: msg })
-        }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
-          .then(function (res) {
-            if (!res.ok || res.d.success !== true) throw new Error(res.d.message || 'Send failed');
-            form.reset();
-            setNote('Thanks, ' + name + '! Your message has been sent. I\'ll reply to ' + email + '.', 'ok');
-            document.getElementById('fallback').hidden = true;
-          })
-          .catch(function (err) {
-            var why = err && err.name === 'AbortError' ? 'Sending took too long.' :
-              'Your message could not be sent right now.';
-            setNote('Sorry. ' + why + ' Please use one of the options below.', 'err');
-            showFallback(subject, msg + '\n\n— ' + name + '\n' + email);
-          })
-          .then(function () { clearTimeout(timer); sendBtn.disabled = false; sendBtn.textContent = 'Send message'; });
+        var body = msg + '\n\n— ' + name + '\n' + email;
+        var su = encodeURIComponent(subject), bo = encodeURIComponent(body), to = encodeURIComponent(TO);
+        document.getElementById('gmailLink').href = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + to + '&su=' + su + '&body=' + bo;
+        document.getElementById('outlookLink').href = 'https://outlook.live.com/mail/0/deeplink/compose?to=' + to + '&subject=' + su + '&body=' + bo;
+        document.getElementById('fallback').hidden = false;
+        setNote('Your email app should open with the message ready. Press Send there to reach me.', 'ok');
+        var a = document.createElement('a');
+        a.href = 'mailto:' + TO + '?subject=' + su + '&body=' + bo;
+        document.body.appendChild(a); a.click(); a.remove();
       });
 
       // Pop-ups
