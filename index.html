@@ -20,10 +20,6 @@
       --accent-soft: #e8f0fe;
       --on-accent: #ffffff;
       --scrim: rgba(14, 17, 22, .45);
-      --glow-a: #dbe8f7;
-      --glow-b: #b9cfe6;
-      --glass: rgba(255, 255, 255, .45);
-      --glass-line: rgba(255, 255, 255, .7);
       --radius: 14px;
       --shadow: 0 1px 2px rgba(20,23,28,.04), 0 4px 16px rgba(20,23,28,.05);
       --font-body: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -40,10 +36,6 @@
         --accent-soft: #15233a;
         --on-accent: #0b1220;
         --scrim: rgba(0, 0, 0, .6);
-        --glow-a: #14263d;
-        --glow-b: #0f1a2a;
-        --glass: rgba(255, 255, 255, .06);
-        --glass-line: rgba(255, 255, 255, .16);
         --shadow: none;
         color-scheme: dark;
       }
@@ -58,10 +50,6 @@
       --accent-soft: #15233a;
       --on-accent: #0b1220;
       --scrim: rgba(0, 0, 0, .6);
-      --glow-a: #14263d;
-      --glow-b: #0f1a2a;
-      --glass: rgba(255, 255, 255, .06);
-      --glass-line: rgba(255, 255, 255, .16);
       --shadow: none;
       color-scheme: dark;
     }
@@ -112,53 +100,39 @@
     }
     .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
     .btn:hover { text-decoration: none; filter: brightness(1.05); }
-    /* Contact pop-up: frosted glass */
-    #contact {
-      width: min(640px, calc(100vw - 32px));
-      background:
-        radial-gradient(120% 80% at 85% 10%, var(--glow-b), transparent 60%),
-        radial-gradient(90% 70% at 10% 90%, var(--glow-b), transparent 65%),
-        var(--glow-a);
-      border-color: var(--glass-line);
+    /* Contact pop-up: same look as the About pop-up */
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px; padding: 11px 18px; justify-self: start;
+      border-radius: 10px; font-weight: 600; font-size: 15px; border: 1px solid var(--line);
+      color: var(--text); background: var(--surface); cursor: pointer; font-family: inherit; text-decoration: none;
     }
-    #contact .close { position: absolute; top: 16px; right: 16px; background: var(--glass); border-color: var(--glass-line); }
-    .contact { padding: 30px 26px 28px; display: grid; gap: 0; }
-    .eyebrow-c { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; }
-    .contact h3 { margin: 0 0 10px; font-size: clamp(30px, 6vw, 40px); line-height: 1.1; letter-spacing: -.03em; text-wrap: balance; }
-    .contact .sub { color: var(--muted); margin: 0 0 22px; }
-    .glass-btn {
-      display: inline-flex; align-items: center; gap: 28px; justify-self: start;
-      padding: 12px 22px; border-radius: 12px; font-size: 16px; font-weight: 500; font-family: inherit;
-      color: var(--text); background: var(--glass); border: 1px solid var(--glass-line); cursor: pointer;
-      backdrop-filter: blur(8px); text-decoration: none;
-    }
-    .glass-btn:hover { text-decoration: none; border-color: var(--accent); }
-    .glass-btn .arr { font-size: 14px; opacity: .7; }
-    .contact .email-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin: 14px 0 0; color: var(--muted); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+    .btn:hover { text-decoration: none; filter: brightness(1.05); }
+    .btn .arr { font-size: 13px; opacity: .8; }
+    .contact { padding: 24px 22px 24px; display: grid; }
+    .contact-title { margin: 0 0 18px; font-size: 22px; letter-spacing: -.02em; text-wrap: balance; }
+    .email-line { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
+    .email-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin: 0 0 0 auto; color: var(--muted); }
     .contact .email { user-select: all; overflow-wrap: anywhere; }
     .link-btn { border: 0; background: none; color: var(--accent); cursor: pointer; font-size: 14px; font-weight: 600; padding: 0; font-family: inherit; }
-    .contact hr { border: 0; border-top: 1px solid var(--glass-line); margin: 24px 0; width: 100%; }
-    .form { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 18px; }
-    .field { display: grid; gap: 8px; min-width: 0; }
+    .contact hr { border: 0; border-top: 1px solid var(--line); margin: 22px 0; width: 100%; }
+    .form { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field { display: grid; gap: 6px; min-width: 0; }
     .field.full { grid-column: 1 / -1; }
-    .field label { font-size: 15px; color: var(--text); }
+    .field label { font-size: 14px; font-weight: 600; color: var(--text); }
     .field input, .field textarea {
       width: 100%; font: inherit; font-size: 16px; color: var(--text);
-      background: var(--glass); border: 1px solid var(--glass-line); border-radius: 12px;
-      padding: 12px 14px; outline: none; backdrop-filter: blur(8px);
+      background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
+      padding: 11px 13px; outline: none;
     }
-    .field textarea { min-height: 140px; resize: vertical; }
-    .field input::placeholder, .field textarea::placeholder { color: var(--muted); opacity: .85; }
-    .field input:focus, .field textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); }
-    .form-note { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 15px; }
-    .form .glass-btn { grid-column: 1 / -1; }
+    .field textarea { min-height: 130px; resize: vertical; }
+    .field input::placeholder { color: var(--muted); opacity: .85; }
+    .field input:focus, .field textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+    .form-note { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 14px; }
+    .form .btn { grid-column: 1 / -1; }
     .fallback { grid-column: 1 / -1; margin: 0; font-size: 14px; color: var(--muted); }
     .fallback a { color: var(--accent); font-weight: 600; }
-    .eyebrow-c, .contact h3 { text-align: center; }
-    .contact h3 { margin-bottom: 24px; }
-    .email-line { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
-    .email-line .email-row { margin: 0 0 0 auto; }
-    @media (max-width: 560px) { .form { grid-template-columns: 1fr; } .contact { padding: 26px 18px 22px; } }
+    @media (max-width: 560px) { .form { grid-template-columns: 1fr; } .contact { padding: 20px 18px 22px; } }
     
     /* Pop-ups with sliders */
     dialog {
@@ -403,12 +377,15 @@
   </dialog>
 
   <dialog id="contact" aria-labelledby="contactTitle">
-    <button class="close" type="button" data-close aria-label="Close">×</button>
+    <div class="dlg-head">
+      <h3 id="contactTitle">Work with me</h3>
+      <button class="close" type="button" data-close aria-label="Close">×</button>
+    </div>
     <div class="contact">
-      <p class="eyebrow-c">Contact</p>
-      <h3 id="contactTitle">Let’s work together.</h3>
+      <div class="slide-label">Contact</div>
+      <h4 class="contact-title">Let’s work together.</h4>
       <div class="email-line">
-        <a class="glass-btn" href="https://outlook.live.com/mail/0/deeplink/compose?to=BranelOng%40outlook.com&amp;subject=Opportunity%20for%20Branel%20Ong" target="_blank" rel="noopener">Email me <span class="arr">↗</span></a>
+        <a class="btn" href="https://outlook.live.com/mail/0/deeplink/compose?to=BranelOng%40outlook.com&amp;subject=Opportunity%20for%20Branel%20Ong" target="_blank" rel="noopener">Email me <span class="arr">↗</span></a>
         <div class="email-row">
           <span class="email">BranelOng@outlook.com</span>
           <button class="link-btn" id="copyBtn" type="button">Copy email</button>
@@ -429,7 +406,7 @@
           <textarea id="cMsg" name="message" required></textarea>
         </div>
         <p class="form-note" id="formNote">Opens a draft in your email app for you to review and send.</p>
-        <button class="glass-btn" type="submit">Continue in email <span class="arr">↗</span></button>
+        <button class="btn primary" type="submit">Continue in email <span class="arr">↗</span></button>
         <p class="fallback" id="fallback" hidden>Didn't open? <a id="outlookLink" href="#" target="_blank" rel="noopener">Send it with Outlook on the web</a> instead.</p>
       </form>
     </div>
