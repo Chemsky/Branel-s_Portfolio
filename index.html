@@ -104,6 +104,8 @@
     .contact h3 { margin: 0 0 10px; font-size: 26px; letter-spacing: -.02em; text-wrap: balance; }
     .contact p { color: var(--muted); max-width: 420px; margin: 0 auto 22px; }
     .contact .email { display: block; font-size: 17px; font-weight: 600; color: var(--text); user-select: all; margin-bottom: 18px; overflow-wrap: anywhere; }
+    .alt-mail { display: inline-block; margin-top: 16px; font-size: 14px; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+    .alt-mail:hover { color: var(--accent); }
     .contact .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
     
     /* Pop-ups with sliders */
@@ -358,9 +360,10 @@
       <p>I'm open to IT support, helpdesk and systems roles. The best way to reach me is by email.</p>
       <span class="email">BranelOng@outlook.com</span>
       <div class="actions">
-        <a class="btn primary" href="mailto:BranelOng@outlook.com">Send an email</a>
+        <a class="btn primary" href="https://outlook.live.com/mail/0/deeplink/compose?to=BranelOng%40outlook.com&amp;subject=Opportunity%20for%20Branel%20Ong" target="_blank" rel="noopener">Send an email</a>
         <button class="btn" id="copyBtn" type="button">Copy email</button>
       </div>
+      <a class="alt-mail" href="mailto:BranelOng@outlook.com?subject=Opportunity%20for%20Branel%20Ong">Or use your own mail app</a>
     </div>
   </dialog>
 
