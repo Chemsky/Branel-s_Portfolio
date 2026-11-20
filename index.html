@@ -19,6 +19,8 @@
       --accent: #1f6feb;
       --accent-soft: #e8f0fe;
       --on-accent: #ffffff;
+      --ok: #1a7f45;
+      --err: #c0352b;
       --page: #e6e6f1;
       --ring-1: #eeeef6;
       --ring-2: #f3f3f9;
@@ -47,6 +49,8 @@
         --accent: #5b9dff;
         --accent-soft: #15233a;
         --on-accent: #0b1220;
+        --ok: #4cc38a;
+        --err: #ff7b72;
         --scrim: rgba(0, 0, 0, .6);
         --shadow: none;
         color-scheme: dark;
@@ -61,6 +65,8 @@
       --accent: #5b9dff;
       --accent-soft: #15233a;
       --on-accent: #0b1220;
+      --ok: #4cc38a;
+      --err: #ff7b72;
       --scrim: rgba(0, 0, 0, .6);
       --shadow: none;
       color-scheme: dark;
@@ -167,6 +173,10 @@
     .form .btn { grid-column: 1 / -1; }
     .fallback { grid-column: 1 / -1; margin: 0; font-size: 14px; color: var(--muted); }
     .fallback a { color: var(--accent); font-weight: 600; }
+    .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+    .form-note.ok { color: var(--ok); font-weight: 600; }
+    .form-note.err { color: var(--err); font-weight: 600; }
+    .btn[disabled] { opacity: .6; cursor: progress; }
     @media (max-width: 560px) { .form { grid-template-columns: 1fr; } .contact { padding: 20px 18px 22px; } }
     
     /* Pop-ups with sliders */
@@ -448,9 +458,10 @@
           <label for="cMsg">Message</label>
           <textarea id="cMsg" name="message" required></textarea>
         </div>
-        <p class="form-note" id="formNote">Opens a draft in your email app for you to review and send.</p>
-        <button class="btn primary" type="submit">Continue in email <span class="arr">↗</span></button>
-        <p class="fallback" id="fallback" hidden>Didn't open? <a id="outlookLink" href="#" target="_blank" rel="noopener">Send it with Outlook on the web</a> instead.</p>
+        <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <p class="form-note" id="formNote" role="status">Your message goes straight to my inbox.</p>
+        <button class="btn primary" type="submit" id="sendBtn">Send message</button>
+        <p class="fallback" id="fallback" hidden>You can also <a id="outlookLink" href="#" target="_blank" rel="noopener">send it with Outlook on the web</a> or email BranelOng@outlook.com directly.</p>
       </form>
     </div>
   </dialog>
@@ -520,30 +531,46 @@
       }
       document.querySelectorAll('dialog').forEach(function (d) { if (d.querySelector('.carousel')) makeCarousel(d); });
 
-      // Contact form: build an email draft addressed to Branel
+      // Contact form: sends the message straight to Branel's inbox through FormSubmit
       var form = document.getElementById('contactForm');
       var note = document.getElementById('formNote');
+      var sendBtn = document.getElementById('sendBtn');
+      var TO = 'BranelOng@outlook.com';
+      function setNote(text, kind) { note.textContent = text; note.className = 'form-note' + (kind ? ' ' + kind : ''); }
+      function showFallback(subject, body) {
+        document.getElementById('outlookLink').href = 'https://outlook.live.com/mail/0/deeplink/compose?to=' +
+          encodeURIComponent(TO) + '&subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+        document.getElementById('fallback').hidden = false;
+      }
       form.addEventListener('submit', function (e) {
         e.preventDefault();
         var name = form.name.value.trim(), email = form.email.value.trim(), msg = form.message.value.trim();
-        if (!name || !email || !msg || !form.email.checkValidity()) {
-          note.textContent = !name ? 'Please enter your name.' : (!email || !form.email.checkValidity()) ? 'Please enter a valid email address.' : 'Please write a short message.';
-          note.style.color = 'var(--accent)';
-          (!name ? form.name : (!email || !form.email.checkValidity()) ? form.email : form.message).focus();
+        var badEmail = !email || !form.email.checkValidity();
+        if (!name || badEmail || !msg) {
+          setNote(!name ? 'Please enter your name.' : badEmail ? 'Please enter a valid email address.' : 'Please write a short message.', 'err');
+          (!name ? form.name : badEmail ? form.email : form.message).focus();
           return;
         }
-        note.textContent = 'Opening a draft in your email app. Review it and press Send.';
-        note.style.color = '';
-        var to = 'BranelOng@outlook.com';
-        var subject = 'Opportunity from ' + name;
-        var body = msg + '\n\n— ' + name + '\n' + email;
-        var q = 'subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-        document.getElementById('outlookLink').href =
-          'https://outlook.live.com/mail/0/deeplink/compose?to=' + encodeURIComponent(to) + '&' + q;
-        document.getElementById('fallback').hidden = false;
-        var a = document.createElement('a');
-        a.href = 'mailto:' + to + '?' + q;
-        document.body.appendChild(a); a.click(); a.remove();
+        if (form._honey.value) return; // spam bot
+        var subject = 'Portfolio message from ' + name;
+        sendBtn.disabled = true; sendBtn.textContent = 'Sending…';
+        setNote('Sending your message…');
+        fetch('https://formsubmit.co/ajax/' + TO, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ name: name, email: email, message: msg, _subject: subject, _replyto: email, _template: 'table', _captcha: 'false' })
+        }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+          .then(function (res) {
+            if (!res.ok || String(res.d.success) !== 'true') throw new Error(res.d.message || 'Send failed');
+            form.reset();
+            setNote('Thanks, ' + name + '! Your message has been sent. I\'ll reply to ' + email + '.', 'ok');
+            document.getElementById('fallback').hidden = true;
+          })
+          .catch(function () {
+            setNote('Sorry, your message could not be sent right now.', 'err');
+            showFallback(subject, msg + '\n\n— ' + name + '\n' + email);
+          })
+          .then(function () { sendBtn.disabled = false; sendBtn.textContent = 'Send message'; });
       });
 
       // Pop-ups
