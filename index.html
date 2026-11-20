@@ -152,8 +152,9 @@
     #contact .dlg-head { justify-content: center; }
     #contact .dlg-head .close { position: absolute; right: 22px; top: 50%; transform: translateY(-50%); }
     .contact .slide-label, .contact-title { text-align: center; }
-    .email-line { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
-    .email-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin: 0 0 0 auto; color: var(--muted); }
+    .email-line { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+    .email-line .btn { justify-self: auto; }
+    .email-row { display: flex; flex-direction: column; align-items: center; gap: 4px; margin: 0; color: var(--muted); }
     .contact .email { user-select: all; overflow-wrap: anywhere; }
     .link-btn { border: 0; background: none; color: var(--accent); cursor: pointer; font-size: 14px; font-weight: 600; padding: 0; font-family: inherit; }
     .contact hr { border: 0; border-top: 1px solid var(--line); margin: 22px 0; width: 100%; }
