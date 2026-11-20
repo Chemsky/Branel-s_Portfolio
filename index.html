@@ -115,6 +115,7 @@
     .ring.r2 { width: calc(var(--d) * 1.15); height: calc(var(--d) * 1.15); background: var(--ring-4); }
     .ring.r1 { width: var(--d); height: var(--d); background: var(--ring-core); }
     main.home { position: relative; z-index: 1; }
+    .wrap.full { width: 100%; }
     main.home h1 { color: var(--page-text); }
     main.home .lead { color: var(--page-muted); }
     main.home .link { color: var(--page-text); border-color: var(--page-line); }
@@ -244,7 +245,7 @@
   </div>
 
   <main class="home">
-    <div class="wrap" style="width:100%">
+    <div class="wrap full">
       <div class="hero">
         <h1>Branel Ong</h1>
         <p class="lead">Singapore</p>
@@ -432,8 +433,8 @@
         <div class="mail-wrap" id="mailChoice" hidden>
           <p class="mail-hint">Send from your own account:</p>
           <div class="mail-choice">
-          <a class="btn" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=BranelOng%40outlook.com&amp;su=Opportunity%20for%20Branel%20Ong" target="_blank" rel="noopener">Use my Gmail</a>
-          <a class="btn" href="https://outlook.live.com/mail/0/deeplink/compose?to=BranelOng%40outlook.com&amp;subject=Opportunity%20for%20Branel%20Ong" target="_blank" rel="noopener">Use my Outlook</a>
+          <a class="btn" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=BranelOng%40outlook.com&amp;su=Opportunity%20for%20Branel%20Ong" target="_blank" rel="noopener noreferrer">Use my Gmail</a>
+          <a class="btn" href="https://outlook.live.com/mail/0/deeplink/compose?to=BranelOng%40outlook.com&amp;subject=Opportunity%20for%20Branel%20Ong" target="_blank" rel="noopener noreferrer">Use my Outlook</a>
           </div>
         </div>
         <div class="email-row">
@@ -449,7 +450,7 @@
       var root = document.documentElement;
 
       // Theme toggle
-      try { var saved = localStorage.getItem('theme'); if (saved) root.setAttribute('data-theme', saved); } catch (e) {}
+      try { var saved = localStorage.getItem('theme'); if (saved === 'dark' || saved === 'light') root.setAttribute('data-theme', saved); } catch (e) {}
       document.getElementById('themeBtn').addEventListener('click', function () {
         var current = root.getAttribute('data-theme') ||
           (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
