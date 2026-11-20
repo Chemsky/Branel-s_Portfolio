@@ -93,10 +93,19 @@
       border-bottom: 2px solid var(--line); transition: border-color .2s, color .2s;
     }
     .link:hover { color: var(--accent); border-color: var(--accent); }
-    .contact-line { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 14px; color: var(--muted); font-size: 14px; }
-    .contact-line .email { color: var(--text); user-select: all; }
-    .link-btn { border: 0; background: none; color: var(--accent); cursor: pointer; font-size: 14px; font-weight: 600; padding: 0; }
-
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 20px;
+      border-radius: 10px; font-weight: 600; font-size: 15px; border: 1px solid var(--line);
+      color: var(--text); background: var(--surface); cursor: pointer; font-family: inherit;
+    }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+    .btn:hover { text-decoration: none; filter: brightness(1.05); }
+    .contact { padding: 32px 26px 30px; text-align: center; }
+    .contact h3 { margin: 0 0 10px; font-size: 26px; letter-spacing: -.02em; text-wrap: balance; }
+    .contact p { color: var(--muted); max-width: 420px; margin: 0 auto 22px; }
+    .contact .email { display: block; font-size: 17px; font-weight: 600; color: var(--text); user-select: all; margin-bottom: 18px; overflow-wrap: anywhere; }
+    .contact .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+    
     /* Pop-ups with sliders */
     dialog {
       width: min(680px, calc(100vw - 32px)); max-height: calc(100dvh - 32px);
@@ -173,10 +182,7 @@
           <li><button class="link" type="button" data-open="skills">Skills</button></li>
           <li><button class="link" type="button" data-open="experience">Experience</button></li>
         </ul>
-        <div class="contact-line">
-          <span class="email">BranelOng@outlook.com</span>
-          <button class="link-btn" id="copyBtn" type="button">Copy email</button>
-        </div>
+        <button class="btn primary" type="button" data-open="contact">Work with me</button>
       </div>
     </div>
   </main>
@@ -342,6 +348,22 @@
     </div>
   </dialog>
 
+  <dialog id="contact" aria-labelledby="contactTitle">
+    <div class="dlg-head">
+      <h3>Contact</h3>
+      <button class="close" type="button" data-close aria-label="Close">×</button>
+    </div>
+    <div class="contact">
+      <h3 id="contactTitle">Let's work together</h3>
+      <p>I'm open to IT support, helpdesk and systems roles. The best way to reach me is by email.</p>
+      <span class="email">BranelOng@outlook.com</span>
+      <div class="actions">
+        <a class="btn primary" href="mailto:BranelOng@outlook.com">Send an email</a>
+        <button class="btn" id="copyBtn" type="button">Copy email</button>
+      </div>
+    </div>
+  </dialog>
+
   <script>
     (function () {
       var root = document.documentElement;
@@ -360,8 +382,8 @@
       document.getElementById('copyBtn').addEventListener('click', function () {
         var btn = this, email = 'BranelOng@outlook.com';
         function done() { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy email'; }, 1600); }
-        if (navigator.clipboard) { navigator.clipboard.writeText(email).then(done, function () { btn.textContent = 'Select the email to copy'; }); }
-        else { btn.textContent = 'Select the email to copy'; }
+        if (navigator.clipboard) { navigator.clipboard.writeText(email).then(done, function () { btn.textContent = 'Select the email above'; }); }
+        else { btn.textContent = 'Select the email above'; }
       });
 
       // Sliders inside each pop-up
@@ -405,12 +427,12 @@
         window.addEventListener('resize', function () { if (dlg.open) fit(); });
         dlg.reset = function () { go(0); };
       }
-      document.querySelectorAll('dialog').forEach(makeCarousel);
+      document.querySelectorAll('dialog').forEach(function (d) { if (d.querySelector('.carousel')) makeCarousel(d); });
 
       // Pop-ups
       function openDialog(id) {
         var d = document.getElementById(id);
-        if (d && !d.open) { d.showModal(); d.reset(); }
+        if (d && !d.open) { d.showModal(); if (d.reset) d.reset(); }
       }
       document.querySelectorAll('[data-open]').forEach(function (btn) {
         btn.addEventListener('click', function () { openDialog(btn.getAttribute('data-open')); });
@@ -422,7 +444,7 @@
 
       // Open a view from the link, e.g. #skills
       var h = location.hash.slice(1);
-      if (h === 'about' || h === 'skills' || h === 'experience') openDialog(h);
+      if (['about', 'skills', 'experience', 'contact'].indexOf(h) > -1) openDialog(h);
     })();
   </script>
 </body>
