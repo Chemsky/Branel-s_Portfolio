@@ -247,6 +247,8 @@
     #contact .close { background: none; border: 0; }
     .contact h3 { font-weight: 600; margin-bottom: 24px; }
     .eyebrow-c, .contact h3 { text-align: center; }
+    .email-line { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
+    .email-line .email-row { margin: 0; }
     .glass-btn { backdrop-filter: none; border-radius: 999px; border-color: var(--line); font-weight: 500; }
     .glass-btn:hover { border-color: var(--text); }
     .link-btn { color: var(--text); text-decoration: underline; text-underline-offset: 3px; font-weight: 500; }
@@ -445,10 +447,12 @@
     <div class="contact">
       <p class="eyebrow-c">Contact</p>
       <h3 id="contactTitle">Let’s work together.</h3>
-      <a class="glass-btn" href="https://outlook.live.com/mail/0/deeplink/compose?to=BranelOng%40outlook.com&amp;subject=Opportunity%20for%20Branel%20Ong" target="_blank" rel="noopener">Email me <span class="arr">↗</span></a>
-      <div class="email-row">
-        <span class="email">BranelOng@outlook.com</span>
-        <button class="link-btn" id="copyBtn" type="button">Copy email</button>
+      <div class="email-line">
+        <a class="glass-btn" href="https://outlook.live.com/mail/0/deeplink/compose?to=BranelOng%40outlook.com&amp;subject=Opportunity%20for%20Branel%20Ong" target="_blank" rel="noopener">Email me <span class="arr">↗</span></a>
+        <div class="email-row">
+          <span class="email">BranelOng@outlook.com</span>
+          <button class="link-btn" id="copyBtn" type="button">Copy email</button>
+        </div>
       </div>
       <hr>
       <form class="form" id="contactForm" novalidate>
