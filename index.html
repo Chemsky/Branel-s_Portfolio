@@ -154,31 +154,17 @@
     .contact .slide-label, .contact-title { text-align: center; }
     .email-line { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
     .email-line .btn { justify-self: auto; }
+    .mail-choice { display: flex; gap: 10px; justify-content: center; }
+    .mail-choice[hidden] { display: none; }
+    .contact { padding-bottom: 30px; }
     .email-row { display: flex; flex-direction: column; align-items: center; gap: 4px; margin: 0; color: var(--muted); }
     .contact .email { user-select: all; overflow-wrap: anywhere; }
     .link-btn { border: 0; background: none; color: var(--accent); cursor: pointer; font-size: 14px; font-weight: 600; padding: 0; font-family: inherit; }
-    .contact hr { border: 0; border-top: 1px solid var(--line); margin: 22px 0; width: 100%; }
-    .form { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .field { display: grid; gap: 6px; min-width: 0; }
-    .field.full { grid-column: 1 / -1; }
-    .field label { font-size: 14px; font-weight: 600; color: var(--text); }
-    .field input, .field textarea {
       width: 100%; font: inherit; font-size: 16px; color: var(--text);
       background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
       padding: 11px 13px; outline: none;
     }
-    .field textarea { min-height: 130px; resize: vertical; }
-    .field input::placeholder { color: var(--muted); opacity: .85; }
-    .field input:focus, .field textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
-    .form-note { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 14px; }
-    .form .btn { grid-column: 1 / -1; }
-    .fallback { grid-column: 1 / -1; margin: 0; font-size: 14px; color: var(--muted); }
-    .fallback a { color: var(--accent); font-weight: 600; }
-    .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
-    .form-note.ok { color: var(--ok); font-weight: 600; }
-    .form-note.err { color: var(--err); font-weight: 600; }
     .btn[disabled] { opacity: .6; cursor: progress; }
-    @media (max-width: 560px) { .form { grid-template-columns: 1fr; } .contact { padding: 20px 18px 22px; } }
     
     /* Pop-ups with sliders */
     dialog {
@@ -439,30 +425,16 @@
       <div class="slide-label">Contact</div>
       <h4 class="contact-title">Let’s work together.</h4>
       <div class="email-line">
-        <a class="btn" href="https://outlook.live.com/mail/0/deeplink/compose?to=BranelOng%40outlook.com&amp;subject=Opportunity%20for%20Branel%20Ong" target="_blank" rel="noopener">Email me <span class="arr">↗</span></a>
+        <button class="btn primary" type="button" id="emailMeBtn" aria-expanded="false" aria-controls="mailChoice">Email me <span class="arr">↗</span></button>
+        <div class="mail-choice" id="mailChoice" hidden>
+          <a class="btn" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=BranelOng%40outlook.com&amp;su=Opportunity%20for%20Branel%20Ong" target="_blank" rel="noopener">Gmail</a>
+          <a class="btn" href="https://outlook.live.com/mail/0/deeplink/compose?to=BranelOng%40outlook.com&amp;subject=Opportunity%20for%20Branel%20Ong" target="_blank" rel="noopener">Outlook</a>
+        </div>
         <div class="email-row">
           <span class="email">BranelOng@outlook.com</span>
           <button class="link-btn" id="copyBtn" type="button">Copy email</button>
         </div>
       </div>
-      <hr>
-      <form class="form" id="contactForm" novalidate>
-        <div class="field">
-          <label for="cName">Your name</label>
-          <input id="cName" name="name" type="text" autocomplete="name" required>
-        </div>
-        <div class="field">
-          <label for="cEmail">Email address</label>
-          <input id="cEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
-        </div>
-        <div class="field full">
-          <label for="cMsg">Message</label>
-          <textarea id="cMsg" name="message" required></textarea>
-        </div>
-        <p class="form-note" id="formNote" role="status">Opens your email app with the message ready. Just press Send.</p>
-        <button class="btn primary" type="submit" id="sendBtn">Continue in email <span class="arr">↗</span></button>
-        <p class="fallback" id="fallback" hidden>Didn't open? Send it with <a id="gmailLink" href="#" target="_blank" rel="noopener">Gmail</a> or <a id="outlookLink" href="#" target="_blank" rel="noopener">Outlook</a> in your browser instead.</p>
-      </form>
     </div>
   </dialog>
 
@@ -531,31 +503,12 @@
       }
       document.querySelectorAll('dialog').forEach(function (d) { if (d.querySelector('.carousel')) makeCarousel(d); });
 
-      // Contact form: opens a ready-to-send email in the visitor's own email app,
-      // so the message comes from their real address and replies work normally
-      var form = document.getElementById('contactForm');
-      var note = document.getElementById('formNote');
-      var TO = 'BranelOng@outlook.com';
-      function setNote(text, kind) { note.textContent = text; note.className = 'form-note' + (kind ? ' ' + kind : ''); }
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var name = form.name.value.trim(), email = form.email.value.trim(), msg = form.message.value.trim();
-        var badEmail = !email || !form.email.checkValidity();
-        if (!name || badEmail || !msg) {
-          setNote(!name ? 'Please enter your name.' : badEmail ? 'Please enter a valid email address.' : 'Please write a short message.', 'err');
-          (!name ? form.name : badEmail ? form.email : form.message).focus();
-          return;
-        }
-        var subject = 'Portfolio message from ' + name;
-        var body = msg + '\n\n— ' + name + '\n' + email;
-        var su = encodeURIComponent(subject), bo = encodeURIComponent(body), to = encodeURIComponent(TO);
-        document.getElementById('gmailLink').href = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + to + '&su=' + su + '&body=' + bo;
-        document.getElementById('outlookLink').href = 'https://outlook.live.com/mail/0/deeplink/compose?to=' + to + '&subject=' + su + '&body=' + bo;
-        document.getElementById('fallback').hidden = false;
-        setNote('Your email app should open with the message ready. Press Send there to reach me.', 'ok');
-        var a = document.createElement('a');
-        a.href = 'mailto:' + TO + '?subject=' + su + '&body=' + bo;
-        document.body.appendChild(a); a.click(); a.remove();
+      // Email me: show a choice of Gmail or Outlook
+      var emailMeBtn = document.getElementById('emailMeBtn');
+      var mailChoice = document.getElementById('mailChoice');
+      emailMeBtn.addEventListener('click', function () {
+        mailChoice.hidden = !mailChoice.hidden;
+        emailMeBtn.setAttribute('aria-expanded', mailChoice.hidden ? 'false' : 'true');
       });
 
       // Pop-ups
