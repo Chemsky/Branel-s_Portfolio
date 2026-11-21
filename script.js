@@ -70,6 +70,39 @@
     emailMeBtn.setAttribute('aria-expanded', mailChoice.hidden ? 'false' : 'true');
   });
 
+  // On phones, open the Gmail / Outlook app; fall back to the web version if it isn't installed.
+  // On computers the links simply open the web version in a new tab.
+  var MAIL_TO = 'BranelOng@outlook.com';
+  var MAIL_SUBJECT = 'Opportunity for Branel Ong';
+  var ua = navigator.userAgent || '';
+  var isIOS = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var isAndroid = /Android/.test(ua);
+  var APPS = {
+    gmail: { ios: 'googlegmail://co?to=', android: 'com.google.android.gm' },
+    outlook: { ios: 'ms-outlook://compose?to=', android: 'com.microsoft.office.outlook' }
+  };
+  function appUrl(app, webUrl) {
+    var to = encodeURIComponent(MAIL_TO), su = encodeURIComponent(MAIL_SUBJECT);
+    if (isIOS) return APPS[app].ios + to + '&subject=' + su;
+    return 'intent:' + MAIL_TO + '?subject=' + su + '#Intent;scheme=mailto;package=' + APPS[app].android +
+      ';S.browser_fallback_url=' + encodeURIComponent(webUrl) + ';end';
+  }
+  document.querySelectorAll('[data-app]').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      if (!isIOS && !isAndroid) return; // computers: open the web version
+      e.preventDefault();
+      var webUrl = link.href;
+      window.location.href = appUrl(link.getAttribute('data-app'), webUrl);
+      if (isIOS) {
+        // iOS has no built-in fallback: if the app didn't open, go to the web version
+        var timer = setTimeout(function () { if (!document.hidden) window.location.href = webUrl; }, 1500);
+        document.addEventListener('visibilitychange', function onHide() {
+          if (document.hidden) { clearTimeout(timer); document.removeEventListener('visibilitychange', onHide); }
+        });
+      }
+    });
+  });
+
   // Pop-ups
   function openDialog(id) {
     var d = document.getElementById(id);
