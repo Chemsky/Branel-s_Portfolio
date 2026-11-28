@@ -2,13 +2,15 @@
 
 This file explains what each file in the portfolio does, section by section.
 
+> Line numbers below are approximate. They drift as the files are edited, so search for the named class or function instead.
+
 The site is a single static page with no build step, framework or dependencies. It has four files that matter:
 
 | File | Lines | Role |
 |---|---|---|
-| `index.html` | 235 | Page structure and all text: home screen plus four pop-up dialogs |
-| `styles.css` | 221 | All visual styling, light/dark theming, carousel layout |
-| `script.js` | 122 | All behaviour: theme toggle, pop-ups, sliders, email buttons |
+| `index.html` | ~225 | Page structure and all text: home screen plus four pop-up dialogs |
+| `styles.css` | ~210 | All visual styling, light/dark theming, slider and timeline layout |
+| `script.js` | ~130 | All behaviour: theme toggle, pop-ups, sliders, email buttons |
 | `vercel.json` | 38 | Hosting config: clean URLs and security headers |
 | `README.md` | 33 | Short project notes for editors |
 
@@ -26,7 +28,7 @@ Vercel serves every response with the headers in vercel.json
  └─ the Content-Security-Policy only allows these files plus Google Fonts
 ```
 
-The home screen shows a name, a location, three links and a "Work with me" button. Each one opens a native `<dialog>` pop-up. The About, Skills and Experience pop-ups each hold a carousel of slides. The Contact pop-up holds the email options.
+The home screen shows a name, a location, three links and a "Work with me" button. Each one opens a native `<dialog>` pop-up. The About and Skills pop-ups each hold a carousel of slides. The Experience pop-up shows a vertical timeline. The Contact pop-up holds the email options.
 
 ---
 
@@ -61,9 +63,9 @@ The home screen shows a name, a location, three links and a "Work with me" butto
 
 Every button carries a **`data-open="<dialog id>"`** attribute. `script.js` reads it to know which pop-up to open. Nothing in the HTML itself runs code. That is deliberate: the security policy forbids inline `onclick` handlers.
 
-### Carousel dialogs: About, Skills, Experience (lines 39–206)
+### Carousel dialogs: About and Skills
 
-All three share the same template:
+Both share the same template:
 
 ```html
 <dialog id="about" aria-labelledby="aboutTitle">
@@ -97,7 +99,12 @@ The `aria-roledescription` and `aria-label` attributes follow the WAI-ARIA carou
 |---|---|---|
 | `#about` | 4 | Summary paragraph · two `.stat` tiles (3+ years, 3 industries) · `.list` of competencies · `.edu-row` (Diploma in IT, Republic Polytechnic, 2016–2019) |
 | `#skills` | 4 | Each slide is a `.chips` tag list: Support & remote access · Systems & data · Data quality management · Productivity |
-| `#experience` | 3 | One job per slide, newest first: date (`.slide-label`), job title, `.company`, and a `.list` of duties. Epoint System (2024–2026), Dao By Dorsett (2023–2024), Absolute Kinetic Consultancy (2021–2023) |
+
+### Experience dialog: timeline
+
+`#experience` has no carousel. Inside `.tl-body` is an ordered list, `<ol class="timeline">`, with one `<li class="tl-item">` per job, newest first: Epoint System (2024–2026), Dao By Dorsett (2023–2024), Absolute Kinetic Consultancy (2021–2023). Each item has a date (`.tl-date`), job title (`.tl-title`), `.company`, and a `.list` of duties shown without bullet markers.
+
+The vertical line is `.timeline::before`; each job's circle is `.tl-item::before`, filled in for the newest job. Every pop-up scrolls back to the top when it opens.
 
 ### Contact dialog (lines 208–231)
 
@@ -311,15 +318,21 @@ This policy is why the README says to keep all code in `styles.css` and `script.
 
 ## 5. Issues found during the review
 
-None of these break the site today, but they are worth knowing about.
+Items 1–4 and 6–8 were fixed in a later clean-up. Nothing on screen changed: every view was compared pixel for pixel before and after.
 
-| # | Where | Issue | Effect |
-|---|---|---|---|
-| 1 | `styles.css` lines 156–159 | Four declarations (`width: 100%; font: inherit; … outline: none;`) followed by `}` have **no selector**, probably left over from a deleted form-input rule | The CSS parser treats them and the next selector as one invalid rule and drops it, so **`.btn[disabled]` on line 160 never applies**. Harmless today because no button is ever disabled. Fix: delete lines 156–159 |
-| 2 | `styles.css` lines 124–130 and 132–138 | `.btn`, `.btn.primary` and `.btn:hover` are each defined **twice** with slightly different values | The second set wins (padding `11px 18px`, gap `10px`). The first set is dead code |
-| 3 | `styles.css` line 1 | The header comment says "About opens as a carousel, Skills and Experience open as pop-ups" | Outdated: all three are carousels inside pop-ups |
-| 4 | `styles.css` | `--ok`, `--err` and `.highlight` are defined but never used | Dead code |
-| 5 | `index.html` lines 178–182 | The Dao By Dorsett slide repeats two duties in different words ("1st Level Support…" / "Delivered Level 1 IT support…", and the two Oracle account bullets) | Content duplication |
-| 6 | `script.js` lines 53–58 | If a swipe starts on the track but the pointer is released outside it, `startX` is never cleared. The next unrelated `pointerup` on the track can then trigger a slide change | Rare. Fix: also reset `startX` on `pointercancel` and `pointerleave` |
-| 7 | `script.js` line 60 | Each carousel adds its own `resize` listener (three total) | Negligible cost, but they could share one |
-| 8 | `script.js` lines 16 and 75 | The email address is hard-coded in two places in `script.js` and three in `index.html` | Changing the address means editing five spots |
+| # | Issue | Status |
+|---|---|---|
+| 1 | Selector-less leftover block in `styles.css` that made the browser drop the next rule | **Fixed**: removed, along with the unused `.btn[disabled]` |
+| 2 | `.btn`, `.btn.primary`, `.btn:hover` defined twice | **Fixed**: merged into one set (same values that were winning) |
+| 3 | Outdated header comment in `styles.css` | **Fixed** |
+| 4 | Unused `--ok`, `--err`, `--bg`, `--radius`, `--shadow` and `.highlight` | **Fixed**: removed. Duplicate `.theme-btn`, `main.home`, `.mail-choice` and `.contact` rules were also merged |
+| 5 | Dao By Dorsett lists two pairs of similar duties (Level 1 support; Oracle accounts) | **Content choice**: left as written |
+| 6 | A swipe released outside the slider could leave a stale start point | **Fixed**: cleared on `pointercancel` / `pointerleave` |
+| 7 | One `resize` listener per carousel | **Fixed**: a single shared listener refits whichever pop-up is open |
+| 8 | Email address repeated in `script.js` | **Fixed** in `script.js` (one `MAIL_TO` constant). It still appears in `index.html` (visible text and two links), which must be edited too if the address changes |
+
+Also fixed in the same pass:
+
+- **"Copy email" failure text stuck.** If copying failed, the button kept saying "Select the email to copy". It now reverts after 3 seconds.
+- **Pop-ups reopened mid-scroll.** Closing Experience after scrolling and reopening it kept the old position. Every pop-up now opens at the top.
+- **iPhone app fallback.** Tapping Use my Gmail/Outlook twice could queue two fallback redirects. Now only the latest one runs, and it's cancelled as soon as the app opens.
